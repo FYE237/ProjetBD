@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes","u":"allclasses-index.html"},{"p":"SqlQUery","l":"DBConnection"},{"p":"SqlQUery","l":"SqlCreate"},{"p":"<Unnamed>","l":"testJDBC"}];updateSearchResults();
