@@ -1,3 +1,6 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.sql.*;
 import java.util.Scanner;
 
@@ -10,14 +13,21 @@ public class testJDBC {
 		// TODO Auto-generated constructor stub
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
-			
+//			
+//		// Enter data using BufferReader
+//        BufferedReader reader = new BufferedReader(
+//            new InputStreamReader(System.in));
+// 
+//        // Reading data using readLine
+//        String name = reader.readLine();
+//		System.out.println(name);
 			
 			DBConnection dbconnection = new DBConnection();
 			AfficherMenu();
 //		
-//		AfficherListeRestaurantParCategrorie(dbconnection);
+		AfficherListeRestaurantParCategrorie(dbconnection);
 			
 		if(authentification(dbconnection) == true ) {
 			AfficherListeRestaurantParCategrorie(dbconnection);
