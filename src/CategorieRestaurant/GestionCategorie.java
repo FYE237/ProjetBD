@@ -51,7 +51,6 @@ public class GestionCategorie {
 				}
 				
 			} catch ( SQLException e) {
-				e. printStackTrace ();
 				System.out.println("Echec : " + e.toString() + " \n" );
 			}
 	}
@@ -108,7 +107,8 @@ public class GestionCategorie {
 			
 		} catch (Exception e) {
 			// TODO: handle exception
-			e.printStackTrace();
+			System.out.println("Echec : " + e.toString() + " \n" );
+			System.out.println("Echec . Problème de Réseau  \n" );
 		}
 		
 	}

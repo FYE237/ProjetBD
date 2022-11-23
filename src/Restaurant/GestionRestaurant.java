@@ -46,8 +46,10 @@ public class GestionRestaurant {
 			        }
 				
 			} catch ( SQLException e) {
-				e. printStackTrace ();
+//				e. printStackTrace ();
 				System.out.println("Echec : " + e.toString() + " \n" );
+				System.out.println("Echec . Problème de Réseau  \n" );
+
 			}
 	}
 	
@@ -90,7 +92,11 @@ public class GestionRestaurant {
 			
 		} catch (Exception e) {
 			// TODO: handle exception
-			e.printStackTrace();
+//			e.printStackTrace();
+			System.out.println("Echec : " + e.toString() + " \n" );
+
+			System.out.println("Echec . Problème de Réseau  \n" );
+
 		}
 		
 	}

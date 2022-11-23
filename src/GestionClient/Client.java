@@ -56,8 +56,8 @@ public class Client {
 			/*
 			 * Requête SQL pour s'authentifier
 			 */
-			String cmd = "select * from  comptes  "; 
-			PreparedStatement stmt = dbConnection.getConnection().prepareStatement( cmd + " where NC = ? and NOM = ? ");
+			String cmd = "SELECT * FROM COMPTES WHERE EMAIL = ? and PSWD = ?"; 
+			PreparedStatement stmt = dbConnection.getConnection().prepareStatement( cmd );
 
 			stmt.setString(1, this.login);
 			stmt.setString(2, this.password);
@@ -71,8 +71,8 @@ public class Client {
 			else return true;
 
 		} catch ( SQLException e) {
-			e. printStackTrace ();
-			System.out.println("Echec : " + e.toString() + " \n" );
+//			e. printStackTrace ();
+			System.out.println("Echec Connexion  \n" );
 			return false;
 		}
 		
