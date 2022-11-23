@@ -6,6 +6,7 @@ import java.util.Scanner;
 
 import CategorieRestaurant.GestionCategorie;
 import GestionClient.Client;
+import Restaurant.GestionRestaurant;
 import SqlQUery.DBConnection;
 
 
@@ -17,15 +18,7 @@ public class testJDBC {
 
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
-//			
-//		// Enter data using BufferReader
-//        BufferedReader reader = new BufferedReader(
-//            new InputStreamReader(System.in));
-// 
-//        // Reading data using readLine
-//        String name = reader.readLine();
-//		System.out.println(name);
-			
+
 			DBConnection dbconnection = new DBConnection();
 			AfficherMenu();
 			
@@ -33,17 +26,47 @@ public class testJDBC {
 			Client client = new Client(dbconnection);
 			
 			while(! client.Authentification()) {
+				
 				System.out.println(" Identifiants incorrects ");
 			}
 
 			
-			//Si il se login avec succès
-			//On affiche la liste des catégories
+			//S'il s'est login 
+			Boolean connected = true;
 			
-			GestionCategorie gestionCategorie =  new GestionCategorie(dbconnection);
+			//Tant qu'il n'a pas demandé à se déconnecter
+			while (connected) {
+				
+				//Entourer chacune de ses fonctions de try catch
+				
+				//On affiche la liste des catégories
+				
+				GestionCategorie gestionCategorie =  new GestionCategorie(dbconnection);
+				gestionCategorie.afficherCategorire();
+				
+				//choix de la catégorie
+				String idcategorie = gestionCategorie.getChoixCategorie();
+				
+				//On affiche la liste des restaurants par catégorie
+				gestionCategorie.afficherRestaurantParCategorire(idcategorie);
+				
+				String idRestaurant = gestionCategorie.getChoixRestaurant();
+				//On affiche les informations sur le restaurant choisi
+				GestionRestaurant gestionRestaurant = new GestionRestaurant(dbconnection);
+				gestionRestaurant.afficherRestaurant(idRestaurant);
+				
+				//On affiche les différents plat du restaurant
+				gestionRestaurant.afficherPlatParRestaurant(idRestaurant);
+				
+				//choix du plat
+				int idPLat = gestionRestaurant.getChoixPlat();
+				
+				/*
+				 * On passe maintenant la commande.
+				 */
+				
 			
-		AfficherListeRestaurantParCategrorie(dbconnection);
-			
+			}
 		
 			
 		
@@ -79,83 +102,10 @@ public class testJDBC {
 		Decorer();
 		System.out.print("\n");
 		
-		
-	}
+	}	
+
 	
-//	/**
-//	 * 
-//	 * @param dbConnection
-//	 * @return un booleen qui indique si l'authentificationa réussie
-//	 */
-//	public static boolean authentification(DBConnection dbConnection) {
-//		
-//		Scanner in = new Scanner(System.in);
-//
-//		System.out.println("Login :  " );
-//		String login = in.nextLine();
-//		
-//		System.out.println("Mot de passe :  " );
-//		String pwd = in.nextLine();
-//		
-//		//System.out.println("You entered string " + login.concat(pwd));
-//		
-//		try {
-//			/*
-//			 * Requête SQL pour s'authentifier
-//			 */
-//			String cmd = "select * from  comptes  "; 
-//			PreparedStatement stmt = dbConnection.getConnection().prepareStatement( cmd + " where NC = ? and NOM = ? ");
-//
-//			stmt.setString(1, login);
-//			stmt.setString(2, pwd);
-//			
-//			ResultSet rset  = stmt.executeQuery();
-//			ResultSetMetaData rsetmd = rset.getMetaData();
-//
-//
-//			int i = rsetmd.getColumnCount();
-//			if(i == 0) return false;
-//			else return true;
-//
-//		} catch ( SQLException e) {
-//			e. printStackTrace ();
-//			System.out.println("Echec : " + e.toString() + " \n" );
-//			return false;
-//		}
-//
-//
-//	}
-	
-	/**
-	 * Affichage de la liste des restaurants par catégorie
-	 * @param dbconnection
-	 */
-	public static void AfficherListeRestaurantParCategrorie(DBConnection dbconnection) {
-		try {
-			
-			String cmd = "select * from ";
-			PreparedStatement stmt = dbconnection.getConnection().prepareStatement( cmd + " comptes ");
-			
-			ResultSet rset  = stmt.executeQuery();
-			ResultSetMetaData rsetmd = rset.getMetaData();
-			
-			
-			int i = rsetmd.getColumnCount();
-			if(i == 0) System.out.println("Aucun élement present");
-			System.out.print("NC" + "\t" + "NOM" + "\t" + "SOLDE" + "\n");
-			 while (rset.next()) {
-		            for (int j = 1; j <= i; j++) {
-		                System.out.print(rset.getString(j) + "\t");
-			    }
-			    System.out.println();
-		        }
-			
-			} catch ( SQLException e) {
-				e. printStackTrace ();
-				System.out.println("Echec : " + e.toString() + " \n" );
-			}
-		
-	}
+
 
 }
 

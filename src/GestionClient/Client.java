@@ -56,18 +56,21 @@ public class Client {
 			/*
 			 * Requête SQL pour s'authentifier
 			 */
-			String cmd = "SELECT * FROM COMPTES WHERE EMAIL = ? and PSWD = ?"; 
-			PreparedStatement stmt = dbConnection.getConnection().prepareStatement( cmd );
+			
+			System.out.println("Login :  " + login );
+			String cmd = "SELECT * FROM COMPTES WHERE EMAIL = ? and PSWD = ? "; 
+			PreparedStatement stmt = dbConnection.getConnection().prepareStatement( cmd);
 
 			stmt.setString(1, this.login);
 			stmt.setString(2, this.password);
 			
+			
 			ResultSet rset  = stmt.executeQuery();
-			ResultSetMetaData rsetmd = rset.getMetaData();
 
-
-			int i = rsetmd.getColumnCount();
-			if(i == 0) return false;
+			if(!rset.isBeforeFirst()) {
+				System.out.println("Echec Connexion  \n" );
+				return false;
+			}
 			else return true;
 
 		} catch ( SQLException e) {

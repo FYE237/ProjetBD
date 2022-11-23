@@ -1,5 +1,8 @@
 package CategorieRestaurant;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -20,11 +23,13 @@ public class GestionCategorie {
 		listeCategorie = new HashMap<Integer,String>();
 	}
 	
-	
+	/**
+	 * On affiche la liste des catégories
+	 */
 	public void afficherCategorire() {
 		try {
 				//Commande pour afficher la liste des categories de restaurant
-				String cmd = "select NC , NOM  from comptes";
+				String cmd = "select * from categories";
 				PreparedStatement stmt = dbconnection.getConnection().prepareStatement( cmd );
 				
 				ResultSet rset  = stmt.executeQuery();
@@ -32,23 +37,24 @@ public class GestionCategorie {
 				
 				
 				int i = rsetmd.getColumnCount();
-				if(i == 0) System.out.println("Aucun élement present");
-				else
-				{	
-					System.out.print(" \t Liste des catégories de restaurant disponibles : \n");
-					System.out.print("NC" + "\t" + "NOM" + "\t" + "\n");
-				
-					int k = 0;
-					 while (rset.next()) {
-				            //for (int j = 1; j <= i; j++) {
-				                System.out.print( k + "\t" +rset.getString(2) + "\n");
-				            
-						        listeCategorie.put(k, rset.getString(2));
-						        k++;
-							    System.out.println();
-				            //}
-				        }
-				}
+				if(!rset.isBeforeFirst()) System.out.println("Aucun élement present \n");
+				else 	
+					{	
+						//System.out.print(" \t La liste des restaurants de la catégorie " + getChoixCategorie() + " : \n");
+						
+						System.out.print(" \t NOM CATEGORIE" + "\t" + "CATEGORIE MERE" + "\t" + "\n");
+						int k = 0;
+						while (rset.next()) {
+							System.out.print( k + "\t");
+							 //On associe à chaque tuple du résultat un couple numéro et valeur cléprimaire de l'attribut
+					        for (int j = 1; j <= i; j++) {
+					            System.out.print("\t" +rset.getString(j) + "\t");         
+					        }
+							listeCategorie.put(k, rset.getString(1));
+							k++;
+							System.out.println();
+					     }
+					}
 				
 			} catch ( SQLException e) {
 				System.out.println("Echec : " + e.toString() + " \n" );
@@ -58,14 +64,20 @@ public class GestionCategorie {
 	/*
 	 * On lit la valeur choisie par l'utilisateur pour afficher la liste des catégories
 	 */
-	public String getChoixCategorie() {
-		String  n = "z";
-		while(! n.matches("[0-9]+")) {
-			System.out.print("Faites votre choix :\t");
-			n = System.console().readLine();
+	public String getChoixCategorie() throws IOException {
+		/// Enter data using BufferReader
+	      BufferedReader reader = new BufferedReader(
+	          new InputStreamReader(System.in));
+
+	      String choix = "z";
+	      while (!choix.matches("[0-9]+")) {
+	    	  System.out.println("Quelle catégorie désirez vous ? \n");
+	          
+	          // Reading data using readLine
+	    	  choix = reader.readLine();
 		}
-		
-		return listeCategorie.get(Integer.parseInt(n));
+		String tmp  = listeCategorie.get(Integer.parseInt(choix));		
+		return tmp;
 		
 	}
 	
@@ -73,35 +85,47 @@ public class GestionCategorie {
 	/**
 	 * On affiche les restaurants de la catégorie choisie par ordre
 	 * d'évaluation décroissante
+	 * @param categorie = getChoixCategoire
 	 */
-	public void afficherRestaurantParCategorire() {
+	public void afficherRestaurantParCategorire(String categorie) {
 		try {
+				listeCategorie = new HashMap<Integer,String>();
 				//Requête pour afficher la liste des restaurants de la catégorie getCategorie() classée par évaluation
-				String cmd = "SELECT ";
+				String cmd = "select emailrestaurant , nom , adresse from categoriesrestaurants JOIN restaurants "
+						+ "on emailrestaurant = email where "
+						+ "nomcategorie = ? ";
 				
 				PreparedStatement stmt = dbconnection.getConnection().prepareStatement( cmd );
+				
+				stmt.setString(1, categorie);
+				
 				ResultSet rset  = stmt.executeQuery();
 				ResultSetMetaData rsetmd = rset.getMetaData();
 				
 				
+				
 				int i = rsetmd.getColumnCount();
-				if(i == 0) System.out.println("Aucun élement present \n");
+				if(!rset.isBeforeFirst()) System.out.println("Aucun élement present \n");
 				else 
 					{	
-						System.out.print(" \t La liste des restaurants de la catégorie " + getChoixCategorie() + " : \n");
+
+						//System.out.print(" \t La liste des restaurants de la catégorie " + getChoixCategorie() + " : \n");
 						
-						//System.out.print("NC" + "\t" + "NOM" + "\t" + "\n");
+						System.out.print("EMAIL DU RESTAURANT" + "\t" + "NOM" + "\t" + "ADRESSE" + "\n");
 						int k = 0;
 						while (rset.next()) {
+								System.out.print( k + "\t");
 							 //On associe à chaque tuple du résultat un couple numéro et valeur cléprimaire de l'attribut
 					            for (int j = 1; j <= i; j++) {
-					                System.out.print( k + "\t" +rset.getString(2) + "\n");
-					            
-							        listeCategorie.put(k, rset.getString(2));
+					                System.out.print( "\t" +rset.getString(j) + "\t");
+					         
+					            }
+								   listeCategorie.put(k, rset.getString(1));
 							        k++;
 								    System.out.println();
-					            }
 					     }
+						
+						
 					}
 			
 			
@@ -112,5 +136,25 @@ public class GestionCategorie {
 		}
 		
 	}
+	
+	
+	public String getChoixRestaurant() throws IOException {
+		/// Enter data using BufferReader
+	      BufferedReader reader = new BufferedReader(
+	          new InputStreamReader(System.in));
+
+	      String choix = "z";
+	      while (!choix.matches("[0-9]+")) {
+	    	  System.out.println("Quel restaurant choisissez vous ? \n");
+	          
+	          // Reading data using readLine
+	    	  choix = reader.readLine();
+		}
+		String tmp  = listeCategorie.get(Integer.parseInt(choix));		
+		return tmp;
+		
+	}
+	
+	
 
 }
