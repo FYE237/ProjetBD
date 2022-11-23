@@ -4,6 +4,8 @@ import java.io.InputStreamReader;
 import java.sql.*;
 import java.util.Scanner;
 
+import CategorieRestaurant.GestionCategorie;
+import GestionClient.Client;
 import SqlQUery.DBConnection;
 
 
@@ -26,13 +28,23 @@ public class testJDBC {
 			
 			DBConnection dbconnection = new DBConnection();
 			AfficherMenu();
-//		
+			
+			//Le client éssaie de se login
+			Client client = new Client(dbconnection);
+			
+			while(! client.Authentification()) {
+				System.out.println(" Identifiants incorrects ");
+			}
+
+			
+			//Si il se login avec succès
+			//On affiche la liste des catégories
+			
+			GestionCategorie gestionCategorie =  new GestionCategorie(dbconnection);
+			
 		AfficherListeRestaurantParCategrorie(dbconnection);
 			
-		if(authentification(dbconnection) == true ) {
-			AfficherListeRestaurantParCategrorie(dbconnection);
-		}
-		else System.out.println("Echec");
+		
 			
 		
 		
@@ -70,49 +82,49 @@ public class testJDBC {
 		
 	}
 	
-	/**
-	 * 
-	 * @param dbConnection
-	 * @return un booleen qui indique si l'authentificationa réussie
-	 */
-	public static boolean authentification(DBConnection dbConnection) {
-		
-		Scanner in = new Scanner(System.in);
-
-		System.out.println("Login :  " );
-		String login = in.nextLine();
-		
-		System.out.println("Mot de passe :  " );
-		String pwd = in.nextLine();
-		
-		//System.out.println("You entered string " + login.concat(pwd));
-		
-		try {
-			/*
-			 * Requête SQL pour s'authentifier
-			 */
-			String cmd = "select * from  comptes  "; 
-			PreparedStatement stmt = dbConnection.getConnection().prepareStatement( cmd + " where NC = ? and NOM = ? ");
-
-			stmt.setString(1, login);
-			stmt.setString(2, pwd);
-			
-			ResultSet rset  = stmt.executeQuery();
-			ResultSetMetaData rsetmd = rset.getMetaData();
-
-
-			int i = rsetmd.getColumnCount();
-			if(i == 0) return false;
-			else return true;
-
-		} catch ( SQLException e) {
-			e. printStackTrace ();
-			System.out.println("Echec : " + e.toString() + " \n" );
-			return false;
-		}
-
-
-	}
+//	/**
+//	 * 
+//	 * @param dbConnection
+//	 * @return un booleen qui indique si l'authentificationa réussie
+//	 */
+//	public static boolean authentification(DBConnection dbConnection) {
+//		
+//		Scanner in = new Scanner(System.in);
+//
+//		System.out.println("Login :  " );
+//		String login = in.nextLine();
+//		
+//		System.out.println("Mot de passe :  " );
+//		String pwd = in.nextLine();
+//		
+//		//System.out.println("You entered string " + login.concat(pwd));
+//		
+//		try {
+//			/*
+//			 * Requête SQL pour s'authentifier
+//			 */
+//			String cmd = "select * from  comptes  "; 
+//			PreparedStatement stmt = dbConnection.getConnection().prepareStatement( cmd + " where NC = ? and NOM = ? ");
+//
+//			stmt.setString(1, login);
+//			stmt.setString(2, pwd);
+//			
+//			ResultSet rset  = stmt.executeQuery();
+//			ResultSetMetaData rsetmd = rset.getMetaData();
+//
+//
+//			int i = rsetmd.getColumnCount();
+//			if(i == 0) return false;
+//			else return true;
+//
+//		} catch ( SQLException e) {
+//			e. printStackTrace ();
+//			System.out.println("Echec : " + e.toString() + " \n" );
+//			return false;
+//		}
+//
+//
+//	}
 	
 	/**
 	 * Affichage de la liste des restaurants par catégorie

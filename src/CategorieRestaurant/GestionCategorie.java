@@ -23,7 +23,7 @@ public class GestionCategorie {
 	
 	public void afficherCategorire() {
 		try {
-			
+				//Commande pour afficher la liste des categories de restaurant
 				String cmd = "select NC , NOM  from comptes";
 				PreparedStatement stmt = dbconnection.getConnection().prepareStatement( cmd );
 				
@@ -33,17 +33,22 @@ public class GestionCategorie {
 				
 				int i = rsetmd.getColumnCount();
 				if(i == 0) System.out.println("Aucun élement present");
-				System.out.print("NC" + "\t" + "NOM" + "\t" + "\n");
-				int k = 0;
-				 while (rset.next()) {
-			            //for (int j = 1; j <= i; j++) {
-			                System.out.print( k + "\t" +rset.getString(2) + "\n");
-			            
-					        listeCategorie.put(k, rset.getString(2));
-					        k++;
-						    System.out.println();
-			            //}
-			        }
+				else
+				{	
+					System.out.print(" \t Liste des catégories de restaurant disponibles : \n");
+					System.out.print("NC" + "\t" + "NOM" + "\t" + "\n");
+				
+					int k = 0;
+					 while (rset.next()) {
+				            //for (int j = 1; j <= i; j++) {
+				                System.out.print( k + "\t" +rset.getString(2) + "\n");
+				            
+						        listeCategorie.put(k, rset.getString(2));
+						        k++;
+							    System.out.println();
+				            //}
+				        }
+				}
 				
 			} catch ( SQLException e) {
 				e. printStackTrace ();
@@ -51,8 +56,16 @@ public class GestionCategorie {
 			}
 	}
 	
+	/*
+	 * On lit la valeur choisie par l'utilisateur pour afficher la liste des catégories
+	 */
 	public String getChoixCategorie() {
-		String  n = System.console().readLine();
+		String  n = "z";
+		while(! n.matches("[0-9]+")) {
+			System.out.print("Faites votre choix :\t");
+			n = System.console().readLine();
+		}
+		
 		return listeCategorie.get(Integer.parseInt(n));
 		
 	}
@@ -73,19 +86,24 @@ public class GestionCategorie {
 				
 				
 				int i = rsetmd.getColumnCount();
-				if(i == 0) System.out.println("Aucun élement present");
-				System.out.print("NC" + "\t" + "NOM" + "\t" + "\n");
-				int k = 0;
-				 while (rset.next()) {
-					 //On associe à chaque tuple du résultat un couple numéro et valeur cléprimaire de l'attribut
-			            for (int j = 1; j <= i; j++) {
-			                System.out.print( k + "\t" +rset.getString(2) + "\n");
-			            
-					        listeCategorie.put(k, rset.getString(2));
-					        k++;
-						    System.out.println();
-			            }
-			     }
+				if(i == 0) System.out.println("Aucun élement present \n");
+				else 
+					{	
+						System.out.print(" \t La liste des restaurants de la catégorie " + getChoixCategorie() + " : \n");
+						
+						//System.out.print("NC" + "\t" + "NOM" + "\t" + "\n");
+						int k = 0;
+						while (rset.next()) {
+							 //On associe à chaque tuple du résultat un couple numéro et valeur cléprimaire de l'attribut
+					            for (int j = 1; j <= i; j++) {
+					                System.out.print( k + "\t" +rset.getString(2) + "\n");
+					            
+							        listeCategorie.put(k, rset.getString(2));
+							        k++;
+								    System.out.println();
+					            }
+					     }
+					}
 			
 			
 		} catch (Exception e) {
