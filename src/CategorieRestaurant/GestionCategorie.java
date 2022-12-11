@@ -81,6 +81,26 @@ public class GestionCategorie {
 		
 	}
 	
+	public String getHour() {
+		String res = java.time.LocalTime.now().toString().substring(0, 1);
+		int tmp = Integer.parseInt(res);
+		if(tmp >= 12 && tmp <= 14) return "12H-14H";
+		if(tmp >= 19 && tmp <= 23) return "19H-23H";
+ 		return "5";
+	}
+	
+	public String getDay() {
+		String res = new java.util.Date().toString().substring(0, 2);
+		if(res.toUpperCase().equals("MON")) return "LUNDI";
+		if(res.toUpperCase().equals("TUE")) return "MARDI";
+		if(res.toUpperCase().equals("WED")) return "MERCREDI";
+		if(res.toUpperCase().equals("THU")) return "JEUDI";
+		if(res.toUpperCase().equals("FRI")) return "VENDREDI";
+		if(res.toUpperCase().equals("SAT")) return "SAMEDI";
+		if(res.toUpperCase().equals("SUN")) return "DIMANCHE";
+		
+		return "";
+	}
 	
 	/**
 	 * On affiche les restaurants de la catégorie choisie par ordre
@@ -92,12 +112,16 @@ public class GestionCategorie {
 				listeCategorie = new HashMap<Integer,String>();
 				//Requête pour afficher la liste des restaurants de la catégorie getCategorie() classée par évaluation
 				String cmd = "select emailrestaurant , nom , adresse from categoriesrestaurants JOIN restaurants "
-						+ "on emailrestaurant = email where "
-						+ "nomcategorie = ? ";
+						+ "on emailrestaurant = email join horaires on"
+						+ " horaires.emailrestaurant = restaurant.emailrestaurant"
+						+ "where  nomcategorie = ?  and plagehoraire = ?  and jour = ? ";
+
 				
 				PreparedStatement stmt = dbconnection.getConnection().prepareStatement( cmd );
 				
 				stmt.setString(1, categorie);
+				stmt.setString(2, getHour());
+				stmt.setString(3, getDay());
 				
 				ResultSet rset  = stmt.executeQuery();
 				ResultSetMetaData rsetmd = rset.getMetaData();
@@ -109,7 +133,7 @@ public class GestionCategorie {
 				else 
 					{	
 
-						//System.out.print(" \t La liste des restaurants de la catégorie " + getChoixCategorie() + " : \n");
+						System.out.print(" \t La liste des restaurants de la catégorie " + categorie + " : \n\n");
 						
 						System.out.print("EMAIL DU RESTAURANT" + "\t" + "NOM" + "\t" + "ADRESSE" + "\n");
 						int k = 0;
@@ -125,7 +149,7 @@ public class GestionCategorie {
 								    System.out.println();
 					     }
 						
-						
+						System.out.println();
 					}
 			
 			

@@ -1,5 +1,6 @@
 package GestionClient;
 
+import java.io.Console;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -41,14 +42,19 @@ public class Client {
 	 */
 	public boolean Authentification() {
 		
+		Console console = System.console();
+		
 		Scanner in = new Scanner(System.in);
 
 		System.out.println("Login :  " );
 		this.login = in.nextLine();
 		
 		
-		System.out.println("Mot de passe :  " );
-		this.password = in.nextLine();
+//		System.out.println("Mot de passe :  " );
+//		this.password = in.nextLine();
+		
+//		System.out.println("Mot de passe :  " );
+		this.password = new String(console.readPassword("Mot de passe :  "));
 		
 		//System.out.println("You entered string " + login.concat(pwd));
 		

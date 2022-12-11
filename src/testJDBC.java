@@ -2,6 +2,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.*;
+import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 import CategorieRestaurant.GestionCategorie;
@@ -20,7 +22,7 @@ public class testJDBC {
 		// TODO Auto-generated method stub
 
 			DBConnection dbconnection = new DBConnection();
-			AfficherMenu();
+			AfficherBienvenue();
 			
 			//Le client éssaie de se login
 			Client client = new Client(dbconnection);
@@ -59,7 +61,7 @@ public class testJDBC {
 				gestionRestaurant.afficherPlatParRestaurant(idRestaurant);
 				
 				//choix du plat
-				int idPLat = gestionRestaurant.getChoixPlat();
+				Map<Integer, Integer> idPLat = gestionRestaurant.getChoixPlat();
 				
 				/*
 				 * On passe maintenant la commande.
@@ -95,7 +97,7 @@ public class testJDBC {
 	 * Afficher le menu  à l'utilisateur dès sa connexion
 	 * @param dbConnection
 	 */
-	public static void AfficherMenu() {
+	public static void AfficherBienvenue() {
 		Scanner in = new Scanner(System.in);
 		Decorer();
 		System.out.print("Bienvenue :) :)");
